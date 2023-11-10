@@ -1,0 +1,39 @@
+# Importation des modules nécessaires
+import requests
+import json
+import re
+
+# Définition des constantes
+URL_GÉOCODE = "https://api.ipstack.com/"
+URL_WHOIS = "https://api.whois.com/"
+
+# Fonction de géocodage d'une adresse IP
+def géocodage(ip):
+    response = requests.get(URL_GÉOCODE + ip + "?access_key=YOUR_ACCESS_KEY")
+    data = json.loads(response.text)
+    return data
+
+# Fonction d'extraction des informations WHOIS d'un domaine
+def whois(domain):
+    response = requests.get(URL_WHOIS + domain + "?access_key=YOUR_ACCESS_KEY")
+    data = json.loads(response.text)
+    return data
+
+# Programme principal
+def main():
+    ip = input("Entrez une adresse IP : ")
+    data = géocodage(ip)
+    print("Adresse IP : {} ({})".format(data["ip"], data["country_code"]))
+    print("Ville : {}".format(data["city"]))
+    print("Pays : {}".format(data["country_name"]))
+    print()
+    domain = input("Entrez un domaine : ")
+    data = whois(domain)
+    print("Nom de domaine : {}".format(data["domain_name"]))
+    print("Propriétaire : {}".format(data["registrant"]["name"]))
+    print("Adresse e-mail : {}".format(data["registrant"]["email"]))
+    print("Numéro de téléphone : {}".format(data["registrant"]["phone"]))
+
+# Exécution du programme
+if __name__ == "__main__":
+    main()
